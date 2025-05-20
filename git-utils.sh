@@ -1,0 +1,52 @@
+gtest() {
+    # Trap Ctrl+C to clean up and return to prompt without killing the shell
+    trap 'echo ""; echo "⚠️  Interrupted. Unstaging changes..."; git reset; return 130' INT
+
+    echo "📦 Staging all changes..."
+    git add -A
+
+    echo "🔍 Running unit tests (utest)..."
+    utest_output=$(utest)
+    echo "$utest_output" > /tmp/utest_output
+    if ! echo "$utest_output" | grep -q "All tests passed"; then
+        echo "❌ Unit tests did not pass. Commit aborted."
+        cat /tmp/utest_output
+        echo "🚫 Commit aborted."
+        git reset
+        return 1
+    else
+        echo "✅ Unit tests passed!"
+    fi
+
+    echo "🔍 Running blackbox tests (rtest)..."
+    rtest_output=$(rtest)
+    echo "$rtest_output" > /tmp/rtest_output
+    if ! echo "$rtest_output" | grep -q "100% tests passed"; then
+        echo "❌ Blackbox tests did not pass. Commit aborted."
+        cat /tmp/rtest_output
+        echo "🚫 Commit aborted."
+        git reset
+        return 1
+    else
+        echo "✅ Blackbox tests passed!"
+    fi
+
+    echo "🎉 All tests passed. Opening commit editor..."
+    command git commit
+}
+
+function git() {
+  if [[ "$1" == "commit" ]]; then
+    shift
+    if [[ "$1" == "--force" ]]; then
+      shift
+      command git commit "$@"
+    else
+      echo "🛡️  Intercepted 'git commit' — running gtest instead..."
+      gtest
+    fi
+  else
+    command git "$@"
+  fi
+}
+
