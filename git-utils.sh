@@ -39,15 +39,27 @@ gtest() {
 }
 
 function git() {
+
+  # Only activate gtest inside the ChampSim repo
+  local champ_root="$HOME/repos/code/ChampSim-dev"  # <-- change this if needed
+    
   if [[ "$1" == "commit" ]]; then
     shift
-    if [[ "$1" == "--force" ]]; then
-      shift
-      command git commit "$@"
-    else
-      echo "🛡️  Intercepted 'git commit' — running gtest instead..."
-      gtest "$@"
-    fi
+    local git_root
+    git_root=$(git rev-parse --show-toplevel 2>/dev/null)
+    
+    
+    if [[ "$git_root" == "$champ_root" ]]; then
+        if [[ "$1" == "--force" ]]; then
+          shift
+          command git commit "$@"
+        else
+          echo "🛡️  Intercepted 'git commit' — running gtest instead..."
+          gtest "$@"
+        fi
+      else
+        command git commit "$@"
+      fi
   else
     command git "$@"
   fi
