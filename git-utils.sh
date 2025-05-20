@@ -32,7 +32,10 @@ gtest() {
     fi
 
     echo "🎉 All tests passed. Opening commit editor..."
-    command git commit
+    trap - INT
+
+    # Forward all original git commit arguments (e.g. --amend, -m, etc.)
+    command git commit "$@"
 }
 
 function git() {
@@ -43,7 +46,7 @@ function git() {
       command git commit "$@"
     else
       echo "🛡️  Intercepted 'git commit' — running gtest instead..."
-      gtest
+      gtest "$@"
     fi
   else
     command git "$@"
