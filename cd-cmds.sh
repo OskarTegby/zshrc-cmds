@@ -6,6 +6,10 @@ alias dow="cd ~/Downloads"
 alias repos="cd ~/repos"
 alias sl="cd ~/shell-files"
 
+alias ref="cd ~/repos/code/ChampSim-ref"
+alias rsrc="cd ~/repos/code/ChampSim-ref/src"
+alias rinc="cd ~/repos/code/ChampSim-ref/inc"
+
 alias cs="cd ~/repos/code/ChampSim-dev"
 alias cm="cd ~/repos/code/ChampSim-dev/cmake_build"
 alias rtests="cd ~/repos/code/ChampSim-dev/cmake_build/tests"
