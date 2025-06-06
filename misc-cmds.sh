@@ -1,6 +1,9 @@
 alias vim="nvim"
 alias vi="nvim"
 
+alias vimo="vim output_srv_128_champsimtrace_xz.out"
+alias cato="cat output_srv_128_champsimtrace_xz.out"
+
 alias vpn="sudo openfortivpn gw.bsc.es:443 -u otegby"
 
 alias maz="open ~/repos/papers/tlb-prefetching/MAZUMDAR-2021-dead-page-and-dead-block-predictors.pdf"
