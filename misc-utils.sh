@@ -45,12 +45,43 @@ except Exception as e:
 
 toarr() {
   local search_str="$1"
+  local csv_flag="$2"
+  local csv_file="$3"
+
   python3 -c "
-import subprocess, re
-pattern = re.compile(r'$search_str\s*(\d+)')
-lines = subprocess.getoutput(\"grep '$search_str' *.out\").splitlines()
-values = [int(m.group(1)) for line in lines if (m := pattern.search(line))]
-print(values)
+import subprocess, re, sys
+from pathlib import Path
+
+pattern = re.compile(r'$search_str\s*([-+]?[0-9]*\.?[0-9]+)')
+files = list(Path('.').glob('*.out'))
+
+if not files:
+    print('No .out files found.', file=sys.stderr)
+    sys.exit(1)
+
+results = []
+
+for file in files:
+    text = file.read_text()
+    match = pattern.search(text)
+    if match:
+        ipc_value = float(match.group(1))
+        results.append( (file.name, ipc_value) )
+    else:
+        print(f'Warning: No IPC found in {file.name}', file=sys.stderr)
+
+if '$csv_flag' == '--csv':
+    header = 'file,ipc'
+    rows = [f\"{fname},{ipc}\" for fname, ipc in results]
+    csv_content = '\\n'.join([header] + rows)
+    if '$csv_file':
+        with open('$csv_file', 'w') as f:
+            f.write(csv_content + '\\n')
+    else:
+        print(csv_content)
+else:
+    values = [ipc for _, ipc in results]
+    print(values)
 "
 }
 
