@@ -26,3 +26,8 @@ atest() {
     cd -
 }
 
+pytest() {
+    cd ~/repos/code/ChampSim-dev/scripts/pyplots
+    python check_scripts.py
+    cd -
+}
