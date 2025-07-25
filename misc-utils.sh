@@ -159,3 +159,84 @@ print(f'{os.path.basename(os.path.abspath(\"$dir\"))},{result},{warn}')
   fi
 }
 
+missgeo() {
+  local line_match=""
+  local field=""
+  local out_file="results.csv"
+  local just_print=0
+
+  # Parse arguments
+  for arg in "$@"; do
+    case "$arg" in
+      --print)
+        just_print=1
+        ;;
+      *)
+        if [[ -z "$line_match" ]]; then
+          line_match="$arg"
+        elif [[ -z "$field" ]]; then
+          field="$arg"
+        else
+          out_file="$arg"
+        fi
+        ;;
+    esac
+  done
+
+  if [[ -z "$line_match" || -z "$field" ]]; then
+    echo "Usage: llcspecificgeo <LINE_MATCH> <FIELD> [output_file] [--print]"
+    echo "Example: llcspecificgeo 'LLC TOTAL' 'MISS:' --print"
+    return 1
+  fi
+
+  if [[ "$just_print" -eq 0 ]]; then
+    echo "directory,geo_mean,warning" > "$out_file"
+  fi
+
+  find . -type f -name "*.out" | sed 's|/[^/]*$||' | sort -u | while read -r dir; do
+    python3 -c "
+import math, os, re
+
+dir_path = '''$dir'''
+line_match = '''$line_match'''
+field = '''$field'''
+pattern = re.compile(rf'{re.escape(field)}\s*([0-9]+)')
+
+values = []
+for file in os.listdir('$dir'):
+    if file.endswith('.out'):
+        with open(os.path.join('$dir', file)) as f:
+            for line in f:
+                if line_match in line:
+                    match = pattern.search(line)
+                    if match:
+                        try:
+                            values.append(float(match.group(1)))
+                        except ValueError:
+                            pass
+
+#print(f'DEBUG: {os.path.basename(os.path.abspath(dir_path))} extracted values: {values}')
+zero_like = [v for v in values if v == 0]
+nonzero = [v for v in values if v > 0]
+
+if not nonzero:
+    result = 'NaN'
+else:
+    result = math.exp(sum(math.log(x) for x in nonzero) / len(nonzero))
+
+warn = f'{len(zero_like)} zero(s)' if zero_like else ''
+print(f'{os.path.basename(os.path.abspath(\"$dir\"))},{result},{warn}')
+" | {
+      if [[ "$just_print" -eq 1 ]]; then
+        cat
+      else
+        tee -a "$out_file" > /dev/null
+      fi
+    }
+  done
+
+  if [[ "$just_print" -eq 0 ]]; then
+    echo "Results saved to $out_file"
+  fi
+}
+
