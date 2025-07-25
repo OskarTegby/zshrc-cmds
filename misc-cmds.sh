@@ -1,8 +1,10 @@
 alias vim="nvim"
 alias vi="nvim"
 
-alias vimo="vim output_srv_128_champsimtrace_xz.out"
-alias cato="cat output_srv_128_champsimtrace_xz.out"
+alias vimo="vim srv_128.out"
+alias cato="cat srv_128.out"
+
+alias vimedit="vim ~/.config/nvim/init.vim"
 
 alias vpn="sudo openfortivpn gw.bsc.es:443 -u otegby"
 
