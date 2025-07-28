@@ -1,4 +1,5 @@
 rtest() {
+    clear
     echo "🔨 Building ChampSim executable..."
     if pushd ~/repos/code/ChampSim-dev > /dev/null; then
         BUILD_OUTPUT=$(make 2>&1)
