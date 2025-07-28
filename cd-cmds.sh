@@ -16,10 +16,21 @@ alias cm="cd ~/repos/code/ChampSim-dev/cmake_build"
 alias rtests="cd ~/repos/code/ChampSim-dev/cmake_build/tests"
 alias utests="cd ~/repos/code/ChampSim-dev/test/cpp/src"
 alias utestbin="cd ~/repos/code/ChampSim-dev/test/bin/"
+
 alias src="cd ~/repos/code/ChampSim-dev/src"
 alias inc="cd ~/repos/code/ChampSim-dev/inc"
+
+alias incs="cd ~/repos/code/ChampSim-dev/inc/inc"
+alias def="cd ~/repos/code/ChampSim-dev/inc/inc/def"
+alias misc="cd ~/repos/code/ChampSim-dev/inc/inc/misc"
+alias stats="cd ~/repos/code/ChampSim-dev/inc/inc/stats"
+alias std="cd ~/repos/code/ChampSim-dev/inc/inc/std"
+alias structs="cd ~/repos/code/ChampSim-dev/inc/inc/structs"
+alias vars="cd ~/repos/code/ChampSim-dev/inc/inc/vars"
+
 alias rs="cd ~/repos/code/ChampSim-dev/results"
 alias sc="cd ~/repos/code/ChampSim-dev/scripts"
+
 alias plts="cd ~/repos/code/ChampSim-dev/scripts/pyplots"
 alias csv="cd ~/repos/code/ChampSim-dev/scripts/pyplots/csv_data"
 alias bhist="cd ~/repos/code/ChampSim-dev/scripts/pyplots/csv_data/bhist"
