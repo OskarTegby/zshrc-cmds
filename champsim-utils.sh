@@ -1,7 +1,13 @@
 rtest() {
     clear
     echo "🔨 Building ChampSim executable..."
-    if pushd ~/repos/code/ChampSim-dev > /dev/null; then
+
+    CHAMPSIM_DIR=~/repos/code/ChampSim-dev
+    CMAKE_DIR="$CHAMPSIM_DIR/cmake_build"
+    EXECUTABLE="$CHAMPSIM_DIR/bin/champsim"
+    TIMESTAMP_FILE="$CHAMPSIM_DIR/.last_test_run"
+
+    if pushd "$CHAMPSIM_DIR" > /dev/null; then
         BUILD_OUTPUT=$(make 2>&1)
         BUILD_STATUS=$?
 
@@ -22,9 +28,18 @@ rtest() {
         return 1
     fi
 
+    # Check if the executable has changed since last test
+    if [[ -f "$EXECUTABLE" && -f "$TIMESTAMP_FILE" ]]; then
+        if [[ "$EXECUTABLE" -ot "$TIMESTAMP_FILE" ]]; then
+            echo "🛑 Skipping tests — executable hasn't changed since last successful run."
+            return 0
+        fi
+    fi
+
     echo "🧪 Running tests..."
-    if pushd ~/repos/code/ChampSim-dev/cmake_build > /dev/null; then
+    if pushd "$CMAKE_DIR" > /dev/null; then
         if ! ctest --output-on-failure --stop-on-failure; then
+            echo "❌ Tests failed."
             popd > /dev/null
             return 1
         fi
@@ -33,6 +48,10 @@ rtest() {
         echo "❌ Could not enter cmake_build directory"
         return 1
     fi
+
+    # Update timestamp after successful test run
+    touch "$TIMESTAMP_FILE"
+    echo "✅ Tests passed — timestamp updated."
 }
 
 utest() {
