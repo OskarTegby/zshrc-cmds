@@ -4,6 +4,11 @@ alias vi="nvim"
 alias vimo="vim srv_128.out"
 alias cato="cat srv_128.out"
 
+alias maps="vim ~/repos/code/ChampSim-dev/inc/inc/misc/maps.inc"
+alias sets="vim ~/repos/code/ChampSim-dev/inc/inc/misc/sets.inc"
+alias using="vim ~/repos/code/ChampSim-dev/inc/inc/misc/using.inc"
+alias params="vim ~/repos/code/ChampSim-dev/inc/inc/misc/params.inc"
+
 alias vimedit="vim ~/.config/nvim/init.vim"
 
 alias vpn="sudo openfortivpn gw.bsc.es:443 -u otegby"
