@@ -19,16 +19,20 @@ gtest() {
     fi
 
     echo "🔍 Running blackbox tests (rtest)..."
-    rtest_output=$(rtest)
-    echo "$rtest_output" > /tmp/rtest_output
-    if ! echo "$rtest_output" | grep -q "100% tests passed"; then
+    if rtest_output=$(rtest); then
+        echo "$rtest_output" > /tmp/rtest_output
+        if echo "$rtest_output" | grep -q "Skipping tests"; then
+            echo "⏭️  Skipped blackbox tests (no build changes)."
+        else
+            echo "✅ Blackbox tests passed!"
+        fi
+    else
+        echo "$rtest_output" > /tmp/rtest_output
         echo "❌ Blackbox tests did not pass. Commit aborted."
         cat /tmp/rtest_output
         echo "🚫 Commit aborted."
         git reset
         return 1
-    else
-        echo "✅ Blackbox tests passed!"
     fi
 
     echo "🎉 All tests passed. Opening commit editor..."
