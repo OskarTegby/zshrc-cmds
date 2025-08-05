@@ -41,3 +41,8 @@ alias rec="cd ~/repos/code/ChampSim-dev/recent_plts"
 alias or="cd ~/repos/code/ChampSim-dev/scripts/oracle_data"
 alias bor="cd ~/repos/code/ChampSim-dev/scripts/oracle_data/bhist"
 alias por="cd ~/repos/code/ChampSim-dev/scripts/oracle_data/phist"
+
+alias ors="cd ~/repos/code/ChampSim-dev/scripts/oracle_stat"
+alias bors="cd ~/repos/code/ChampSim-dev/scripts/oracle_stat/bhist"
+alias pors="cd ~/repos/code/ChampSim-dev/scripts/oracle_stat/phist"
+
