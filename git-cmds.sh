@@ -12,4 +12,5 @@ alias pl="git pull"
 alias br="git branch"
 alias au="git add -u"
 
-alias wgit="watch -c 'git log --color=always'"
+alias wgit="watch -c 'git log --color=always --decorate'"
+alias wdff="watch --color git diff --color=always"
