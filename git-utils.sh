@@ -1,45 +1,69 @@
 gtest() {
-    # Trap Ctrl+C to clean up and return to prompt without killing the shell
-    trap 'echo ""; echo "⚠️  Interrupted. Unstaging changes..."; git reset; return 130' INT
+  # silence job-control chatter ([5] PID, "done")
+  if [[ -n "$ZSH_VERSION" ]]; then
+    emulate -L zsh
+    setopt localoptions nomonitor nonotify
+  else
+    local __oldset="$(set +o)"
+    set +m
+  fi
 
-    echo "📦 Staging all changes..."
+  local auto_staged=0
+
+  # Decide staging policy BEFORE setting the trap so the var is visible there
+  if git diff --cached --quiet; then
+    echo "📦 No files staged — staging all changes..."
     git add -A
+    auto_staged=1
+  else
+    echo "📦 Using existing staged changes — not staging anything else."
+  fi
 
-    echo "🔍 Running unit tests (utest)..."
-    utest_output=$(utest)
-    echo "$utest_output" > /tmp/utest_output
-    if ! echo "$utest_output" | grep -q "All tests passed"; then
-        echo "❌ Unit tests did not pass. Commit aborted."
-        cat /tmp/utest_output
-        echo "🚫 Commit aborted."
-        git reset
-        return 1
-    else
-        echo "✅ Unit tests passed!"
-    fi
+  # Trap Ctrl+C: only unstage if we auto-staged
+  trap 'echo ""; echo "⚠️  Interrupted."; 
+        if [[ '"$auto_staged"' -eq 1 ]]; then 
+          echo "↩️  Unstaging auto-staged changes..."; git reset; 
+        else 
+          echo "↩️  Leaving your staged set untouched."; 
+        fi; 
+        return 130' INT
 
-    echo "🔍 Running blackbox tests (rtest)..."
-    if rtest_output=$(rtest); then
-        echo "$rtest_output" > /tmp/rtest_output
-        if echo "$rtest_output" | grep -q "Skipping tests"; then
-            echo "⏭️  Skipped blackbox tests (no build changes)."
-        else
-            echo "✅ Blackbox tests passed!"
-        fi
-    else
-        echo "$rtest_output" > /tmp/rtest_output
-        echo "❌ Blackbox tests did not pass. Commit aborted."
-        cat /tmp/rtest_output
-        echo "🚫 Commit aborted."
-        git reset
-        return 1
-    fi
+  echo "🚀 Running unit tests and blackbox tests in parallel…"
 
-    echo "🎉 All tests passed. Opening commit editor..."
-    trap - INT
+  : > /tmp/utest_output
+  ( utest > /tmp/utest_output 2>&1; echo $? > /tmp/utest_rc ) & pid_utest=$!
 
-    # Forward all original git commit arguments (e.g. --amend, -m, etc.)
-    command git commit "$@"
+  : > /tmp/rtest_output
+  ( RTEST_SKIP_BUILD=1 RTEST_QUIET=1 rtest > /tmp/rtest_output 2>&1; echo $? > /tmp/rtest_rc ) & pid_rtest=$!
+
+  wait $pid_utest; wait $pid_rtest
+  u_rc=$(cat /tmp/utest_rc 2>/dev/null || echo 1)
+  r_rc=$(cat /tmp/rtest_rc 2>/dev/null || echo 1)
+
+  # restore bash options if we changed them
+  if [[ -z "$ZSH_VERSION" ]]; then eval "$__oldset"; fi
+
+  if [[ $u_rc -ne 0 ]]; then
+    echo "❌ Unit tests failed. Commit aborted."
+    cat /tmp/utest_output
+    echo "🚫 Commit aborted."
+    [[ $auto_staged -eq 1 ]] && git reset
+    return 1
+  fi
+
+  if [[ $r_rc -ne 0 ]]; then
+    echo "❌ Blackbox tests failed. Commit aborted."
+    cat /tmp/rtest_output
+    echo "🚫 Commit aborted."
+    [[ $auto_staged -eq 1 ]] && git reset
+    return 1
+  fi
+
+  echo "✅ Unit tests passed!"
+  echo "✅ Blackbox tests passed!"
+  echo "🎉 All tests passed. Opening commit editor..."
+  trap - INT
+  command git commit "$@"
 }
 
 function git() {
