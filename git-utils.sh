@@ -1,3 +1,28 @@
+# Build gate: build top-level ChampSim with Make; abort commit on failure.
+build_or_fail() {
+  local ROOT CORES
+  ROOT="$(git rev-parse --show-toplevel 2>/dev/null)" || { echo "❌ Not a git repo"; return 1; }
+
+  if command -v nproc >/dev/null 2>&1; then
+    CORES="$(nproc)"
+  else
+    CORES="$(sysctl -n hw.ncpu 2>/dev/null || echo 4)"
+  fi
+
+  echo "🔍 Building ChampSim via top-level Makefile…"
+  local build_output
+  if ! build_output=$( set -e; make 2>&1 >/dev/null); then
+    echo "❌ ChampSim build failed — aborting commit."
+    echo
+    echo "💥 Compiler output:"
+    echo "$build_output"
+    return 1
+  fi
+
+  echo "✅ ChampSim build succeeded."
+  return 0
+}
+
 gtest() {
   # silence job-control chatter ([5] PID, "done")
   if [[ -n "$ZSH_VERSION" ]]; then
@@ -27,6 +52,13 @@ gtest() {
           echo "↩️  Leaving your staged set untouched."; 
         fi; 
         return 130' INT
+
+  if ! build_or_fail; then
+    echo "❌ Build failed — aborting commit."
+    [[ "$auto_staged" -eq 1 ]] && git reset
+    if [[ -z "$ZSH_VERSION" ]]; then eval "$__oldset"; fi
+    return 1
+  fi
 
   echo "🚀 Running unit tests and blackbox tests in parallel…"
 
