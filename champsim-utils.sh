@@ -13,7 +13,6 @@ rtest() {
   local CTEST_EXTRA_ARGS=()
   if (( $# > 0 )) && [[ "$1" == "--" ]]; then shift; CTEST_EXTRA_ARGS=("$@"); fi
 
-  # helper to conditionally print
   info() { [[ -n "${RTEST_QUIET:-}" ]] || echo "$@"; }
 
   if [[ -z "${RTEST_SKIP_BUILD:-}" ]]; then
@@ -36,13 +35,14 @@ rtest() {
   fi
 
   info "🧪 Running tests in parallel (-j $JOBS)..."
-  if pushd "$CMAKE_DIR" >/dev/null; then
-    CTEST_OUTPUT_ON_FAILURE=1 ctest -j "$JOBS" --output-on-failure --no-tests=error "${CTEST_EXTRA_ARGS[@]}"
-    local s=$?; popd >/dev/null
-    [[ $s -eq 0 ]] || { echo "❌ Tests failed."; return 1; }
-  else
-    echo "❌ Could not enter cmake_build directory"; return 1
-  fi
+  CTEST_OUTPUT_ON_FAILURE=1 ctest \
+    --test-dir "$CMAKE_DIR" \
+    -j "$JOBS" \
+    --output-on-failure \
+    --no-tests=error \
+    "${CTEST_EXTRA_ARGS[@]}"
+  local s=$?
+  [[ $s -eq 0 ]] || { echo "❌ Tests failed."; return 1; }
 
   touch "$TIMESTAMP_FILE"
   info "✅ Tests passed — timestamp updated."
