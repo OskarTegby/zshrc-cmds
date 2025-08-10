@@ -11,11 +11,16 @@ build_or_fail() {
 
   echo "🔍 Building ChampSim via top-level Makefile…"
   local build_output
-  if ! build_output=$( set -e; make 2>&1 >/dev/null); then
+  if ! build_output=$(
+    set -e
+    make -C "$ROOT" -j"$CORES" 2>&1
+  ); then
     echo "❌ ChampSim build failed — aborting commit."
+    # Optional: limit noise (change 80 to taste or set BUILD_SHOW_LINES)
+    local N="${BUILD_SHOW_LINES:-80}"
     echo
-    echo "💥 Compiler output:"
-    echo "$build_output"
+    echo "💥 Compiler output (last ${N} lines):"
+    printf '%s\n' "$build_output" | tail -n "$N"
     return 1
   fi
 
