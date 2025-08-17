@@ -49,9 +49,24 @@ rtest() {
 }
 
 utest() {
-    cd ~/repos/code/ChampSim-dev
-    make test
-    cd -
+  local CHAMPSIM_DIR=~/repos/code/ChampSim-dev
+  local log="/tmp/utest.log"
+
+  pushd "$CHAMPSIM_DIR" >/dev/null || { echo "❌ Cannot cd to $CHAMPSIM_DIR"; return 2; }
+
+  make -j"$(nproc)" test >"$log" 2>&1
+  local rc=$?
+
+  popd >/dev/null || true
+
+  if (( rc != 0 )); then
+    echo "❌ Unit tests failed to build/run (rc=$rc)"
+    cat "$log"
+    return "$rc"
+  fi
+
+  echo "✅ Unit tests passed"
+  return 0
 }
 
 ptest() {
