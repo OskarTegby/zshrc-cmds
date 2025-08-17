@@ -30,6 +30,7 @@ alias vars="cd ~/repos/code/ChampSim-dev/inc/inc/vars"
 
 alias rs="cd ~/repos/code/ChampSim-dev/results"
 alias sc="cd ~/repos/code/ChampSim-dev/scripts"
+alias lan="cd ~/repos/code/ChampSim-dev/scripts/launch"
 
 alias plts="cd ~/repos/code/ChampSim-dev/scripts/pyplots"
 alias csv="cd ~/repos/code/ChampSim-dev/scripts/pyplots/csv_data"
