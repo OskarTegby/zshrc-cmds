@@ -4,6 +4,9 @@ alias vi="nvim"
 alias vimo="vim srv_128.out"
 alias cato="cat srv_128.out"
 
+alias vimc="vim srv_128.llc_accesses.dat"
+alias vimt="vim srv_128.llt_accesses.dat"
+
 alias maps="vim ~/repos/code/ChampSim-dev/inc/inc/misc/maps.inc"
 alias sets="vim ~/repos/code/ChampSim-dev/inc/inc/misc/sets.inc"
 alias using="vim ~/repos/code/ChampSim-dev/inc/inc/misc/using.inc"
