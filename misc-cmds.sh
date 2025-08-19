@@ -11,6 +11,7 @@ alias maps="vim ~/repos/code/ChampSim-dev/inc/inc/misc/maps.inc"
 alias sets="vim ~/repos/code/ChampSim-dev/inc/inc/misc/sets.inc"
 alias using="vim ~/repos/code/ChampSim-dev/inc/inc/misc/using.inc"
 alias params="vim ~/repos/code/ChampSim-dev/inc/inc/misc/params.inc"
+alias structs="vim ~/repos/code/ChampSim-dev/inc/inc/structs/added_structs.inc"
 
 alias vimedit="vim ~/.config/nvim/init.vim"
 
