@@ -26,6 +26,7 @@ alias misc="cd ~/repos/code/ChampSim-dev/inc/inc/misc"
 alias stats="cd ~/repos/code/ChampSim-dev/inc/inc/stats"
 alias std="cd ~/repos/code/ChampSim-dev/inc/inc/std"
 alias structs="cd ~/repos/code/ChampSim-dev/inc/inc/structs"
+alias inlined="cd ~/repos/code/ChampSim-dev/inc/inc/inlined"
 alias vars="cd ~/repos/code/ChampSim-dev/inc/inc/vars"
 
 alias rs="cd ~/repos/code/ChampSim-dev/results"
