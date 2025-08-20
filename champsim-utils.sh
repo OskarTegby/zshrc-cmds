@@ -69,6 +69,12 @@ utest() {
   return 0
 }
 
+smk() (
+  echo "🔨 Building ChampSim…"
+  cd ~/repos/code/ChampSim-dev || { echo "❌ Repo not found"; return 1; }
+  make -j"$(nproc)" "$@"
+)
+
 ptest() {
     cd ~/repos/code/ChampSim-dev
     python test_rip_data.py
