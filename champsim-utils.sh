@@ -1,5 +1,4 @@
 rtest() {
-  clear
   local CHAMPSIM_DIR=~/repos/code/ChampSim-dev
   local CMAKE_DIR="$CHAMPSIM_DIR/cmake_build"
   local EXECUTABLE="$CHAMPSIM_DIR/bin/champsim"
@@ -34,6 +33,7 @@ rtest() {
     return 0
   fi
 
+  clear
   info "🧪 Running tests in parallel (-j $JOBS)..."
   CTEST_OUTPUT_ON_FAILURE=1 ctest \
     --test-dir "$CMAKE_DIR" \
