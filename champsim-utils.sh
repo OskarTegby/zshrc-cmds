@@ -1,5 +1,4 @@
 rtest() {
-  local CHAMPSIM_DIR=~/repos/code/ChampSim-dev
   local CMAKE_DIR="$CHAMPSIM_DIR/cmake_build"
   local EXECUTABLE="$CHAMPSIM_DIR/bin/champsim"
   local TIMESTAMP_FILE="$CHAMPSIM_DIR/.last_test_run"
@@ -49,7 +48,6 @@ rtest() {
 }
 
 utest() {
-  local CHAMPSIM_DIR=~/repos/code/ChampSim-dev
   local log="/tmp/utest.log"
 
   pushd "$CHAMPSIM_DIR" >/dev/null || { echo "❌ Cannot cd to $CHAMPSIM_DIR"; return 2; }
@@ -71,7 +69,7 @@ utest() {
 
 smk() {
   echo "🔨 Building ChampSim…"
-  cd ~/repos/code/ChampSim-dev || { echo "❌ Repo not found"; return 1; }
+  cd $CHAMPSIM_DIR || { echo "❌ Repo not found"; return 1; }
 
   # Check for -c or -clean and remove them from arguments
   local clean_first=false
@@ -93,7 +91,7 @@ smk() {
 
 dbmk() {
   echo "🐞 Building ChampSim (debug)…"
-  cd ~/repos/code/ChampSim-dev || { echo "❌ Repo not found"; return 1; }
+  cd $CHAMPSIM_DIR || { echo "❌ Repo not found"; return 1; }
 
   local clean_first=false
   local args=()
@@ -136,23 +134,23 @@ gdbcs() {
 }
 
 ptest() {
-    cd ~/repos/code/ChampSim-dev
+    cd $CHAMPSIM_DIR
     python test_rip_data.py
     python test_compute_stats.py
 }
 
 atest() {
-    cd ~/repos/code/ChampSim-dev
+    cd $CHAMPSIM_DIR
     make test
     cd -
 
-    cd ~/repos/code/ChampSim-dev/cmake_build
+    cd $CHAMPSIM_DIR/cmake_build
     ctest
     cd -
 }
 
 pytest() {
-    cd ~/repos/code/ChampSim-dev/scripts/pyplots
+    cd $CHAMPSIM_DIR/scripts/pyplots
     python check_scripts.py
     cd -
 }

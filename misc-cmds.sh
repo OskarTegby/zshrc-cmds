@@ -7,13 +7,15 @@ alias cato="cat srv_128.out"
 alias vimc="vim srv_128.llc_accesses.dat"
 alias vimt="vim srv_128.llt_accesses.dat"
 
-alias maps="vim ~/repos/code/ChampSim-dev/inc/inc/misc/maps.inc"
-alias sets="vim ~/repos/code/ChampSim-dev/inc/inc/misc/sets.inc"
-alias using="vim ~/repos/code/ChampSim-dev/inc/inc/misc/using.inc"
-alias params="vim ~/repos/code/ChampSim-dev/inc/inc/misc/params.inc"
-alias mstructs="vim ~/repos/code/ChampSim-dev/inc/inc/structs/misc_structs.inc"
-alias hstructs="vim ~/repos/code/ChampSim-dev/inc/inc/structs/hist_structs.inc"
-alias bstructs="vim ~/repos/code/ChampSim-dev/inc/inc/structs/block_structs.inc"
+# ChampSim include files
+alias maps="vim $CHAMPSIM_DIR/inc/inc/misc/maps.inc"
+alias sets="vim $CHAMPSIM_DIR/inc/inc/misc/sets.inc"
+alias using="vim $CHAMPSIM_DIR/inc/inc/misc/using.inc"
+alias params="vim $CHAMPSIM_DIR/inc/inc/misc/params.inc"
+
+alias mstr="vim $CHAMPSIM_DIR/inc/inc/structs/misc_structs.inc"
+alias hstr="vim $CHAMPSIM_DIR/inc/inc/structs/hist_structs.inc"
+alias bstr="vim $CHAMPSIM_DIR/inc/inc/structs/block_struct.inc"
 
 alias vimedit="vim ~/.config/nvim/init.vim"
 

@@ -106,7 +106,7 @@ gtest() {
 function git() {
 
   # Only activate gtest inside the ChampSim repo
-  local champ_root="$HOME/repos/code/ChampSim-dev"  # <-- change this if needed
+  local champ_root=$CHAMPSIM_DIR  # <-- change this if needed
     
   if [[ "$1" == "commit" ]]; then
     shift
