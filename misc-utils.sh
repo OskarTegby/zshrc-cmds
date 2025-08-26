@@ -7,27 +7,6 @@ move() {
     fi
 }
 
-dbmk() {
-  echo "🐞 Building ChampSim (debug)…"
-  cd ~/repos/code/ChampSim-dev || { echo "❌ Repo not found"; return 1; }
-
-  local clean_first=false
-  local args=()
-  for arg in "$@"; do
-    case "$arg" in
-      -c|-clean) clean_first=true ;;
-      *) args+=("$arg") ;;
-    esac
-  done
-
-  if $clean_first; then
-    echo "🧹 Cleaning build first…"
-    make clean || { echo "❌ make clean failed"; return 1; }
-  fi
-
-  make BUILD_TYPE=debug "${args[@]}"
-}
-
 mc() {
     make clean
     make BUILD_TYPE=mem_check

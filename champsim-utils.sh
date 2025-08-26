@@ -91,6 +91,27 @@ smk() {
   make -j"$(nproc)" "${args[@]}"
 }
 
+dbmk() {
+  echo "🐞 Building ChampSim (debug)…"
+  cd ~/repos/code/ChampSim-dev || { echo "❌ Repo not found"; return 1; }
+
+  local clean_first=false
+  local args=()
+  for arg in "$@"; do
+    case "$arg" in
+      -c|-clean) clean_first=true ;;
+      *) args+=("$arg") ;;
+    esac
+  done
+
+  if $clean_first; then
+    echo "🧹 Cleaning build first…"
+    make clean || { echo "❌ make clean failed"; return 1; }
+  fi
+
+  make BUILD_TYPE=debug "${args[@]}"
+}
+
 gdbcs() {
   : "${CHAMPSIM_DIR:?Set CHAMPSIM_DIR to ChampSim root (e.g., export CHAMPSIM_DIR=~/repos/code/ChampSim-dev)}"
   cd "$CHAMPSIM_DIR" || { echo "❌ Can't cd into: $CHAMPSIM_DIR"; return 1; }
