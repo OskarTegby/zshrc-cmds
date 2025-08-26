@@ -91,6 +91,29 @@ smk() {
   make -j"$(nproc)" "${args[@]}"
 }
 
+gdbcs() {
+  : "${CHAMPSIM_DIR:?Set CHAMPSIM_DIR to ChampSim root (e.g., export CHAMPSIM_DIR=~/repos/code/ChampSim-dev)}"
+  cd "$CHAMPSIM_DIR" || { echo "❌ Can't cd into: $CHAMPSIM_DIR"; return 1; }
+
+  local bin="./bin/champsim"
+  if [[ ! -x "$bin" ]]; then
+    echo "⚠️ $bin not found or not executable."
+    echo "   Build first (e.g.,: make BUILD_TYPE=debug)."
+    return 1
+  fi
+
+  # Default args, unless you pass your own
+  local -a args=(--warmup_instructions 50000000
+                 --simulation_instructions 100000000
+                 trace-files/QMM/srv_128.champsimtrace.xz)
+
+  if (( $# )); then
+    args=("$@")
+  fi
+
+  gdb --args "$bin" "${args[@]}"
+}
+
 ptest() {
     cd ~/repos/code/ChampSim-dev
     python test_rip_data.py
