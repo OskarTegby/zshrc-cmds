@@ -50,3 +50,7 @@ alias ors="cd $CHAMPSIM_DIR/scripts/oracle_stat"
 alias bors="cd $CHAMPSIM_DIR/scripts/oracle_stat/bhist"
 alias pors="cd $CHAMPSIM_DIR/scripts/oracle_stat/phist"
 
+# Sniper
+alias sn="cd $SNIPER_DIR"
+alias sns="cd $SNIPER_REF"
+alias b="cd $SNIPER_DIR/benchmarks"
